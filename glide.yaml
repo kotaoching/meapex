@@ -1,0 +1,17 @@
+package: github.com/meapex/meapex
+import:
+- package: github.com/gin-gonic/contrib
+  subpackages:
+  - sessions
+- package: github.com/gin-gonic/gin
+  version: ^1.0.0
+- package: github.com/jinzhu/gorm
+  version: ^1.0.0
+  subpackages:
+  - dialects/postgres
+- package: github.com/nu7hatch/gouuid
+- package: github.com/pelletier/go-toml
+  version: ^0.3.5
+- package: golang.org/x/crypto
+  subpackages:
+  - bcrypt
