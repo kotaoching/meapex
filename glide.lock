@@ -1,8 +1,10 @@
-hash: 926eb6c718fb4a0c46033db2e5a123f0b996aa84be3f7c806a2186e322915b4b
-updated: 2016-10-09T20:17:53.5712945+08:00
+hash: 4f440528fe55f01037079468c7ceaee731e4ed59267115323dab8d456c5c51c0
+updated: 2016-11-29T21:35:39.0019998+08:00
 imports:
 - name: github.com/boj/redistore
   version: fc113767cd6b051980f260d6dbe84b2740c46ab0
+- name: github.com/dgrijalva/jwt-go
+  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/garyburd/redigo
   version: ffa8d46ada782d81cfda81a0fbd9f45ceae448e8
   subpackages:
@@ -13,7 +15,7 @@ imports:
   subpackages:
   - sessions
 - name: github.com/gin-gonic/gin
-  version: f931d1ea80ae95a6fc739213cdd9399bd2967fb6
+  version: 2dae550eb5392006a4582ce9c90016a9b5a74e8b
   subpackages:
   - binding
   - render
@@ -28,7 +30,7 @@ imports:
 - name: github.com/gorilla/sessions
   version: ca9ada44574153444b00d3fd9c8559e4cc95f896
 - name: github.com/jinzhu/gorm
-  version: 5ec2f6ceb66dbb99077a2b48a5a963d073d5459d
+  version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
   subpackages:
   - dialects/postgres
 - name: github.com/jinzhu/inflection
@@ -45,7 +47,7 @@ imports:
 - name: github.com/pelletier/go-buffruneio
   version: df1e16fde7fc330a0ca68167c23bf7ed6ac31d6d
 - name: github.com/pelletier/go-toml
-  version: 45932ad32dfdd20826f5671da37a5f3ce9f26a8d
+  version: 64ff1ea4d585bc1fca65e6331eb8239f2ff31845
 - name: golang.org/x/crypto
   version: 8e06e8ddd9629eb88639aba897641bff8031f1d3
   subpackages:

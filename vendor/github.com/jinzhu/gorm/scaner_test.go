@@ -3,7 +3,6 @@ package gorm_test
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"errors"
 	"testing"
 )
 
@@ -52,14 +51,7 @@ func (l ExampleStringSlice) Value() (driver.Value, error) {
 }
 
 func (l *ExampleStringSlice) Scan(input interface{}) error {
-	switch value := input.(type) {
-	case string:
-		return json.Unmarshal([]byte(value), l)
-	case []byte:
-		return json.Unmarshal(value, l)
-	default:
-		return errors.New("not supported")
-	}
+	return json.Unmarshal(input.([]byte), l)
 }
 
 type ExampleStruct struct {
@@ -74,12 +66,5 @@ func (l ExampleStructSlice) Value() (driver.Value, error) {
 }
 
 func (l *ExampleStructSlice) Scan(input interface{}) error {
-	switch value := input.(type) {
-	case string:
-		return json.Unmarshal([]byte(value), l)
-	case []byte:
-		return json.Unmarshal(value, l)
-	default:
-		return errors.New("not supported")
-	}
+	return json.Unmarshal(input.([]byte), l)
 }

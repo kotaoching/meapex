@@ -34,12 +34,11 @@ go build -o toml-test github.com/BurntSushi/toml-test
 # NOTE: this basically mocks an install without having to go back out to github for code
 mkdir -p src/github.com/pelletier/go-toml/cmd
 cp *.go *.toml src/github.com/pelletier/go-toml
-cp -R cmd/* src/github.com/pelletier/go-toml/cmd
+cp cmd/*.go src/github.com/pelletier/go-toml/cmd
 go build -o test_program_bin src/github.com/pelletier/go-toml/cmd/test_program.go
 
 # Run basic unit tests
-go test github.com/pelletier/go-toml \
-        github.com/pelletier/go-toml/cmd/tomljson
+go test -v github.com/pelletier/go-toml
 
 # run the entire BurntSushi test suite
 if [[ $# -eq 0 ]] ; then
