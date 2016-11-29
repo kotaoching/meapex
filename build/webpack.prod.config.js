@@ -5,8 +5,9 @@ var autoprefixer = require('autoprefixer')
 var path = require('path')
 
 module.exports = {
+  context: path.resolve(__dirname, '../src'),
   entry: {
-    app: './src/index.js',
+    app: './index.js',
     vendor: [
       'react',
       'react-dom',
@@ -18,21 +19,24 @@ module.exports = {
     ]
   },
   output: {
-    path: './dist',
-    filename: 'app.js',
-    publicPath: '/static/'
+    filename: '[name].[hash].js',
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '/'
   },
   module: {
     rules: [{
       test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      use: 'babel-loader'
+      use: 'babel-loader',
+      exclude: /node_modules/
     }, {
       test: /global\.scss$/,
       loader: ExtractTextPlugin.extract({
         fallbackLoader: "style-loader",
         loader: [{
-          loader: 'css-loader'
+          loader: 'css-loader',
+          query: {
+            minimize: true
+          }
         }, {
           loader: 'postcss-loader'
         }, {
@@ -46,6 +50,7 @@ module.exports = {
         loader: [{
           loader: 'css-loader',
           query: {
+            minimize: true,
             modules: true,
             importLoaders: 1,
             localIdentName: '[local]__[hash:base64:5]'
@@ -64,28 +69,29 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+        'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true
-    }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'vendor.js'
+      name: 'vendor'
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress:{
+        warnings: true
+      }
     }),
     new ExtractTextPlugin({
-      filename: 'app.css',
+      filename: 'app.[hash].css',
       disable: false,
       allChunks: true
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/index.html'
     }),
     new webpack.LoaderOptionsPlugin({
       options: {
         postcss: [autoprefixer],
       },
+    }),
+    new HtmlWebpackPlugin({
+      template: './index.html'
     })
   ]
 }

@@ -5,8 +5,9 @@ var autoprefixer = require('autoprefixer')
 var path = require('path')
 
 module.exports = {
+  context: path.resolve(__dirname, '../src'),
   entry: {
-    app: './src/index.js',
+    app: './index.js',
     vendor: [
       'react',
       'react-dom',
@@ -14,19 +15,20 @@ module.exports = {
       'react-router',
       'react-router-redux',
       'redux',
-      'redux-actions'
+      'redux-actions',
+      'redux-thunk'
     ]
   },
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'app.js',
-    publicPath: '/static/'
+    filename: '[name].js',
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '/'
   },
   module: {
     rules: [{
       test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      use: 'babel-loader'
+      use: 'babel-loader',
+      exclude: /node_modules/
     }, {
       test: /global\.scss$/,
       loader: ExtractTextPlugin.extract({
@@ -64,12 +66,12 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
+        'NODE_ENV': JSON.stringify('development')
       }
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      filename: 'vendor.js'
+      name: 'vendor'
     }),
     new ExtractTextPlugin({
       filename: 'app.css',
@@ -82,18 +84,18 @@ module.exports = {
       },
     }),
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: './index.html'
     })
   ],
+  devtool: 'inline-source-map',
   devServer: {
-    contentBase: './src',
-    port: 9000,
+    contentBase: path.resolve(__dirname, '../src'),
+    publicPath: '/',
     historyApiFallback: true,
-    compress: true,
-    inline: true,
     hot: true,
     proxy: {
-      "/api": "http://localhost:8080"
+      "/api/*": "http://localhost:8080",
+      "/account/*": "http://localhost:8080"
     }
   }
 }
