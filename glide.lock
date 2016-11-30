@@ -1,19 +1,12 @@
-hash: 4f440528fe55f01037079468c7ceaee731e4ed59267115323dab8d456c5c51c0
-updated: 2016-11-29T21:35:39.0019998+08:00
+hash: c58ae340ef3c05e9164905a02d6be1620ceb100a66ad9bcca7e87e1c8198d01b
+updated: 2016-11-30T15:47:26.9944543+08:00
 imports:
-- name: github.com/boj/redistore
-  version: fc113767cd6b051980f260d6dbe84b2740c46ab0
 - name: github.com/dgrijalva/jwt-go
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/garyburd/redigo
-  version: ffa8d46ada782d81cfda81a0fbd9f45ceae448e8
+  version: 8873b2f1995f59d4bcdd2b0dc9858e2cb9bf0c13
   subpackages:
-  - internal
   - redis
-- name: github.com/gin-gonic/contrib
-  version: 547e518040cfb96576b507d2f26779ab9c6fc829
-  subpackages:
-  - sessions
 - name: github.com/gin-gonic/gin
   version: 2dae550eb5392006a4582ce9c90016a9b5a74e8b
   subpackages:
@@ -23,12 +16,6 @@ imports:
   version: 2402d76f3d41f928c7902a765dfc872356dd3aad
   subpackages:
   - proto
-- name: github.com/gorilla/context
-  version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
-- name: github.com/gorilla/securecookie
-  version: c13558c2b1c44da35e0eb043053609a5ba3a1f19
-- name: github.com/gorilla/sessions
-  version: ca9ada44574153444b00d3fd9c8559e4cc95f896
 - name: github.com/jinzhu/gorm
   version: 5174cc5c242a728b435ea2be8a2f7f998e15429b
   subpackages:

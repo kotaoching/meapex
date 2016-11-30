@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/meapex/meapex/server/db"
 	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"time"
@@ -25,20 +26,20 @@ func CreateUser(username string, email string, password string) (*User, error) {
 		Email:    email,
 		Password: generatePasswordHash(password),
 	}
-	err := db.Create(user).Error
+	err := db.ORM.Create(user).Error
 
 	return user, err
 }
 
 func UpdateUser(user *User) error {
-	err := db.Save(user).Error
+	err := db.ORM.Save(user).Error
 
 	return err
 }
 
 func GetUserById(id interface{}) (*User, error) {
 	user := new(User)
-	err := db.Where("id = ?", id).First(user).Error
+	err := db.ORM.Where("id = ?", id).First(user).Error
 
 	return user, err
 }
@@ -47,9 +48,9 @@ func GetUserByUsernameOrEmail(account string) (*User, error) {
 	user := new(User)
 	var err error
 	if strings.Contains(account, "@") {
-		err = db.Where("lower(email) = ?", strings.ToLower(account)).First(user).Error
+		err = db.ORM.Where("lower(email) = ?", strings.ToLower(account)).First(user).Error
 	} else {
-		err = db.Where("lower(username) = ?", strings.ToLower(account)).First(user).Error
+		err = db.ORM.Where("lower(username) = ?", strings.ToLower(account)).First(user).Error
 	}
 
 	return user, err

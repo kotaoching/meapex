@@ -7,7 +7,11 @@ class Home extends Component {
 
   render() {
     return (
-      <h1>MeApex</h1>
+      <div id="main">
+        <div className="container">
+          <h1>MeApex</h1>
+        </div>
+      </div>
     )
   }
 }

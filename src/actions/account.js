@@ -60,7 +60,7 @@ export function signin(account, password) {
     .then(response => {
       if (response.ok) {
         response.json().then(json => {
-          localStorage.setItem('token', json.data.token)
+          localStorage.setItem('token', json.token)
           dispatch(authUser(json))
         })
       }
@@ -79,7 +79,13 @@ export function signout() {
 
 export function signinFromToken(token) {
   return dispatch => {
-    return fetch(`/api/me?token=${token}`)
+    return fetch('/api/me', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(response => {
         if (response.ok) {
           response.json().then(json => dispatch(authUser(json)))

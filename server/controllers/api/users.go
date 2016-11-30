@@ -1,27 +1,43 @@
 package api
 
 import (
-	"github.com/gin-gonic/contrib/sessions"
+	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/meapex/meapex/server/db"
 	"github.com/meapex/meapex/server/models"
+	"github.com/meapex/meapex/server/package/token"
 )
 
 func Me(c *gin.Context) {
-	session := sessions.Default(c)
-	userid := session.Get("userid")
-	if userid != nil {
-		user, err := models.GetUserById(userid)
+	claims, err := token.Parse(c.Request)
+	if err == nil {
+		userid := claims["userid"]
+		username := claims["username"].(string)
 
+		redisConn := db.RedisPool.Get()
+		exists, _ := redis.Bool(redisConn.Do("EXISTS", "me:user:"+username))
+		if !exists {
+			c.JSON(401, gin.H{
+				"errors": []interface{}{map[string]interface{}{
+					"status":  "401",
+					"title":   "invalid_token",
+					"message": "Invalid authorized token.",
+				}},
+			})
+			c.Abort()
+		}
+
+		defer redisConn.Close()
+
+		user, err := models.GetUserById(userid)
 		if err == nil {
 			c.JSON(200, gin.H{
 				"data": map[string]interface{}{
-					"id": user.ID,
-					"attributes": map[string]interface{}{
-						"username":   user.Username,
-						"email":      user.Email,
-						"created_at": user.CreatedAt,
-						"updated_at": user.UpdatedAt,
-					},
+					"id":         user.ID,
+					"username":   user.Username,
+					"email":      user.Email,
+					"created_at": user.CreatedAt,
+					"updated_at": user.UpdatedAt,
 				},
 			})
 		} else {
@@ -30,10 +46,9 @@ func Me(c *gin.Context) {
 	} else {
 		c.JSON(401, gin.H{
 			"errors": []interface{}{map[string]interface{}{
-				"status": "401",
-				"source": "",
-				"title":  "Unauthorized",
-				"detail": "Authorization is required.",
+				"status":  "401",
+				"title":   "authentication_error",
+				"message": "Authorization required.",
 			}},
 		})
 	}

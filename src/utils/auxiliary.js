@@ -11,22 +11,24 @@ function formatTime(timestamp) {
 
 function subString(str, n) {
   let r = /[^\x00-\xff]/g;
-  if (str.replace(r, "mm").length <= n) {
+  if (str.replace(r, 'mm').length <= n) {
     return str;
   }
   let m = Math.floor(n / 2);
   for (let i = m; i < str.length; i++) {
-    if (str.substr(0, i).replace(r, "mm").length >= n) {
-      return str.substr(0, i) + "...";
+    if (str.substr(0, i).replace(r, 'mm').length >= n) {
+      return str.substr(0, i) + '...';
     }
   }
   return str;
 }
 
 function getQueryString(name) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
   var r = window.location.search.substr(1).match(reg);
-  if (r != null) return unescape(r[2]);
+  if (r !== null){
+    return unescape(r[2]);
+  }
   return null;
 }
 

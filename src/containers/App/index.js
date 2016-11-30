@@ -25,11 +25,7 @@ class App extends Component {
     return (
       <div>
         <Header account={account} />
-        <div id="main">
-          <div className="container">
-            {children}
-          </div>
-        </div>
+        {children}
         <Footer />
       </div>
     )

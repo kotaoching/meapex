@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 
-import styles from './style.scss'
+import style from './style.scss'
 
 class Header extends Component {
   constructor(props) {
@@ -34,8 +34,8 @@ class Header extends Component {
 
   render() {
     return (
-      <div id="header" className={styles.header}>
-        <div className={`navbar navbar-default ${styles.nav}`}>
+      <div id="header" className={style.header}>
+        <div className={`navbar navbar-default ${style.nav}`}>
           <div className="container">
             <div className="navbar-header">
               <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav-menu" aria-expanded="false">

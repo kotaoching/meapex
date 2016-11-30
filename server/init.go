@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/meapex/meapex/server/controllers"
 	"github.com/meapex/meapex/server/controllers/api"
@@ -10,14 +9,14 @@ import (
 
 func Init() {
 	r := gin.Default()
-	store := sessions.NewCookieStore([]byte("secret"))
-	//store, _ := sessions.NewRedisStore(10, "tcp", "localhost:6379", "", []byte("secret"))
-	r.Use(sessions.Sessions("abc_sess", store))
 
-	r.POST("/signup", controllers.Signup)
-	r.POST("/signin", controllers.Signin)
-	r.POST("/signout", controllers.Signout)
-	r.POST("/find-password", controllers.FindPassword)
+	account := r.Group("/account")
+	{
+		account.POST("/signup", controllers.Signup)
+		account.POST("/signin", controllers.Signin)
+		account.POST("/signout", controllers.Signout)
+		account.POST("/find-password", controllers.FindPassword)
+	}
 
 	apiv1 := r.Group("/api")
 	{

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import styles from './style.scss'
+import style from './style.scss'
 
 class Footer extends Component {
   constructor(props) {
@@ -9,7 +9,7 @@ class Footer extends Component {
 
   render() {
     return (
-      <div id="footer" className={styles.footer}>
+      <div id="footer" className={style.footer}>
         <div className="container">
           <a href="/" className="">
             MeApex

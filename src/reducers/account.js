@@ -21,7 +21,7 @@ export default handleActions({
   AUTH_USER: (state, action) => {
     return {...state,
       loggedIn: true,
-      user: action.payload.user
+      user: action.payload.data
     }
   },
 

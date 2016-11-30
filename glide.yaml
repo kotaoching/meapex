@@ -1,8 +1,5 @@
 package: github.com/meapex/meapex
 import:
-- package: github.com/gin-gonic/contrib
-  subpackages:
-  - sessions
 - package: github.com/gin-gonic/gin
   version: ^1.0.0
 - package: github.com/jinzhu/gorm
@@ -17,3 +14,7 @@ import:
   - bcrypt
 - package: github.com/dgrijalva/jwt-go
   version: ^3.0.0
+- package: github.com/garyburd/redigo
+  version: ^1.0.0
+  subpackages:
+  - redis
