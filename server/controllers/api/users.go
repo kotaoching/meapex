@@ -25,6 +25,7 @@ func Me(c *gin.Context) {
 				}},
 			})
 			c.Abort()
+			return
 		}
 
 		defer redisConn.Close()
