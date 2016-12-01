@@ -1,3 +1,4 @@
+import 'semantic-ui-css/semantic.css'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
