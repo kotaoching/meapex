@@ -15,18 +15,15 @@ func main() {
 	databaseUsername := config.Get("database.username").(string)
 	databasePassword := config.Get("database.password").(string)
 
-	database := db.InitDB("host=" + databaseHost + " user=" + databaseUsername + " password=" + databasePassword + " dbname=" + databaseDBname + " sslmode=disable")
-	database.AutoMigrate(&models.User{})
+	db.InitDB(databaseHost, databaseUsername, databasePassword, databaseDBname)
+	db.ORM.AutoMigrate(&models.User{})
 
 	redisHost := config.Get("redis.host").(string)
 	redisPort := config.Get("redis.port").(string)
 	redisDBname := config.Get("redis.dbname").(int64)
 	redisPassword := config.Get("redis.password").(string)
 
-	pool := db.InitPool(redisHost+":"+redisPort, redisDBname, redisPassword)
-
-	con := pool.Get()
-	defer con.Close()
+	db.InitPool(redisHost, redisPort, redisPassword, redisDBname)
 
 	server.Init()
 }

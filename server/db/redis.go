@@ -9,13 +9,13 @@ var (
 	RedisPool *redis.Pool
 )
 
-func InitPool(dataSourceName string, dbname int64, password string) *redis.Pool {
+func InitPool(host string, port string, password string, dbname int64) *redis.Pool {
 	RedisPool = &redis.Pool{
 		MaxIdle:     3,
 		MaxActive:   100,
 		IdleTimeout: 180 * time.Second,
 		Dial: func() (redis.Conn, error) {
-			con, err := redis.Dial("tcp", dataSourceName)
+			con, err := redis.Dial("tcp", host+":"+port)
 			if err != nil {
 				panic(err.Error())
 			}
