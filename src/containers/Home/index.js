@@ -8,7 +8,7 @@ class Home extends Component {
   render() {
     return (
       <div id="main">
-        <div className="ui container">
+        <div className="container">
           <h1>MeApex</h1>
         </div>
       </div>

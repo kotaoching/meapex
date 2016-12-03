@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 
-import { Menu, Container, Dropdown } from 'semantic-ui-react'
-
 import style from './style.scss'
 
 class Header extends Component {
@@ -12,42 +10,53 @@ class Header extends Component {
 
   renderLoggedIn() {
     return (
-      <Menu.Menu position='right'>
-        <Dropdown as={Menu.Item} text={this.props.account.user.username}>
-          <Dropdown.Menu>
-            <Dropdown.Item>我的主页</Dropdown.Item>
-            <Dropdown.Item>设置</Dropdown.Item>
-            <Dropdown.Item>退出</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Menu.Menu>
+      <ul className="nav navbar-nav navbar-right">
+        <li className="dropdown">
+          <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{this.props.account.user.username}<span className="caret"></span></a>
+          <ul className="dropdown-menu">
+            <li><a href="#">我的主页</a></li>
+            <li><a href="#">设置</a></li>
+            <li><a href="#">退出</a></li>
+          </ul>
+        </li>
+      </ul>
     )
   }
 
   renderLoggedOut() {
     return (
-      <Menu.Menu position='right'>
-        <Menu.Item name='signup' as={Link} to='/signup'>
-          注册
-        </Menu.Item>
-        <Menu.Item name='signin' as={Link} to='/signin'>
-          登录
-        </Menu.Item>
-      </Menu.Menu>
+      <ul className="nav navbar-nav navbar-right">
+        <li><Link to="/signup">注册</Link></li>
+        <li><Link to="/signin">登录</Link></li>
+      </ul>
     )
   }
 
   render() {
     return (
       <div id="header" className={style.header}>
-        <Menu>
-          <Container>
-            <Menu.Item header>MeApex</Menu.Item>
-            <Menu.Item name='home' as={Link} to='/' />
+        <div className={`navbar navbar-default ${style.nav}`}>
+          <div className="container">
+            <div className="navbar-header">
+              <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav-menu" aria-expanded="false">
+                <span className="sr-only">Toggle navigation</span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+                <span className="icon-bar"></span>
+              </button>
+              <a className="navbar-brand" href="/">MeApex</a>
+            </div>
 
-            {this.props.account.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
-          </Container>
-        </Menu>
+            <div className="collapse navbar-collapse" id="main-nav-menu">
+              <ul className="nav navbar-nav">
+                <li className="active">
+                  <Link to="/">首页</Link>
+                </li>
+              </ul>
+              {this.props.account.loggedIn ? this.renderLoggedIn() : this.renderLoggedOut()}
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

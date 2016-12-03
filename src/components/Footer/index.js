@@ -10,7 +10,7 @@ class Footer extends Component {
   render() {
     return (
       <div id="footer" className={style.footer}>
-        <div className="ui container">
+        <div className="container">
           <a href="/" className="">
             MeApex
           </a>
