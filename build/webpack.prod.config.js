@@ -15,11 +15,12 @@ module.exports = {
       'react-router',
       'react-router-redux',
       'redux',
-      'redux-actions'
+      'redux-actions',
+      './assets/scripts/bootstrap.min.js'
     ]
   },
   output: {
-    filename: '[name].[hash].js',
+    filename: '[hash]/js/[name].js',
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/'
   },
@@ -62,8 +63,22 @@ module.exports = {
         }]
       })
     }, {
-      test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-      use: 'file-loader'
+      test: /\.(png|jpg|jpeg|gif)$/,
+      use: [{
+        loader: "url-loader",
+        options: {
+          limit: 1000,
+          name: 'images/[name].[ext]'
+        }
+      }]
+    }, {
+      test: /\.(eot|svg|ttf|woff|woff2)$/,
+      use: [{
+        loader: "file-loader",
+        options: {
+          name: 'fonts/[name].[ext]'
+        }
+      }]
     }]
   },
   plugins: [
@@ -71,6 +86,11 @@ module.exports = {
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
       }
+    }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor'
@@ -81,7 +101,7 @@ module.exports = {
       }
     }),
     new ExtractTextPlugin({
-      filename: 'app.[hash].css',
+      filename: '[hash]/css/app.css',
       disable: false,
       allChunks: true
     }),

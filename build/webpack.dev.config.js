@@ -16,7 +16,8 @@ module.exports = {
       'react-router-redux',
       'redux',
       'redux-actions',
-      'redux-thunk'
+      'redux-thunk',
+      './assets/scripts/bootstrap.min.js'
     ]
   },
   output: {
@@ -59,8 +60,22 @@ module.exports = {
         }]
       })
     }, {
-      test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-      use: 'file-loader'
+      test: /\.(png|jpg|jpeg|gif)$/,
+      use: [{
+        loader: "url-loader",
+        options: {
+          limit: 1000,
+          name: 'images/[name].[ext]'
+        }
+      }]
+    }, {
+      test: /\.(eot|svg|ttf|woff|woff2)$/,
+      use: [{
+        loader: "file-loader",
+        options: {
+          name: 'fonts/[name].[ext]'
+        }
+      }]
     }]
   },
   plugins: [
@@ -70,6 +85,11 @@ module.exports = {
       }
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery'
+    }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor'
     }),
@@ -87,7 +107,7 @@ module.exports = {
       template: './index.html'
     })
   ],
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     contentBase: path.resolve(__dirname, '../src'),
     publicPath: '/',
