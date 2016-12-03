@@ -1,10 +1,11 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/meapex/meapex/server/controllers"
 	"github.com/meapex/meapex/server/controllers/api"
-	"net/http"
 )
 
 func Init() {

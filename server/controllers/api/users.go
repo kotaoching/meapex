@@ -15,7 +15,7 @@ func Me(c *gin.Context) {
 		username := claims["username"].(string)
 
 		redisConn := db.RedisPool.Get()
-		exists, _ := redis.Bool(redisConn.Do("EXISTS", "me:user:"+username))
+		exists, _ := redis.Bool(redisConn.Do("EXISTS", "me:user:"+username+":token"))
 		if !exists {
 			c.JSON(401, gin.H{
 				"errors": []interface{}{map[string]interface{}{

@@ -1,9 +1,10 @@
 package utils
 
 import (
-	"github.com/nu7hatch/gouuid"
 	"math/rand"
 	"time"
+
+	"github.com/nu7hatch/gouuid"
 )
 
 func GenerateUUID() (string, error) {

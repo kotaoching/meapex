@@ -1,10 +1,11 @@
 package models
 
 import (
-	"github.com/meapex/meapex/server/db"
-	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"time"
+
+	"github.com/meapex/meapex/server/db"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {

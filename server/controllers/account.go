@@ -1,16 +1,18 @@
 package controllers
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/meapex/meapex/server/db"
 	"github.com/meapex/meapex/server/models"
 	"github.com/meapex/meapex/server/package/token"
 	"github.com/meapex/meapex/server/utils"
-	"time"
 )
 
 func Signup(c *gin.Context) {
 	username := c.PostForm("username")
+
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
@@ -48,7 +50,7 @@ func Signin(c *gin.Context) {
 		signedToken := token.New(user.ID, user.Username, time.Now().Add(time.Hour*24*7).Unix())
 
 		redisConn := db.RedisPool.Get()
-		redisConn.Do("SET", "me:user:"+user.Username, signedToken, "EX", int64(time.Hour*24*7))
+		redisConn.Do("SET", "me:user:"+user.Username+":token", signedToken, "EX", int64(time.Hour*24*7))
 
 		defer redisConn.Close()
 
@@ -79,7 +81,7 @@ func Signout(c *gin.Context) {
 		username := claims["username"].(string)
 
 		redisConn := db.RedisPool.Get()
-		redisConn.Do("DEL", "me:user:"+username)
+		redisConn.Do("DEL", "me:user:"+username+":token")
 
 		defer redisConn.Close()
 	}
