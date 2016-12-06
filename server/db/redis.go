@@ -10,7 +10,7 @@ var (
 	RedisPool *redis.Pool
 )
 
-func InitPool(host string, port string, password string, dbname int64) *redis.Pool {
+func InitRedisPool(host string, port string, password string, dbname int64) *redis.Pool {
 	RedisPool = &redis.Pool{
 		MaxIdle:     3,
 		MaxActive:   100,
