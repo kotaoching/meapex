@@ -2,6 +2,7 @@ package uuid_test
 
 import (
 	"fmt"
+
 	"github.com/nu7hatch/gouuid"
 )
 

@@ -6,7 +6,6 @@ import:
   version: ^1.0.0
   subpackages:
   - dialects/postgres
-- package: github.com/nu7hatch/gouuid
 - package: github.com/pelletier/go-toml
   version: ^0.3.5
 - package: golang.org/x/crypto
@@ -18,3 +17,9 @@ import:
   version: ^1.0.0
   subpackages:
   - redis
+- package: github.com/nu7hatch/gouuid
+- package: github.com/speps/go-hashids
+  version: ^1.0.0
+- package: github.com/mozillazg/go-slugify
+  version: ^0.2.0
+- package: github.com/jmoiron/sqlx
