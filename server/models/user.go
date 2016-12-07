@@ -4,57 +4,66 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jinzhu/gorm"
 	"github.com/meapex/meapex/server/db"
+	"github.com/speps/go-hashids"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
 	ID        uint      `gorm:"primary_key" json:"id"`
+	GUID      string    `gorm:"type:varchar(255);not null;unique_index" json:"guid"`
 	Username  string    `gorm:"type:varchar(255);not null;unique_index" json:"username"`
 	Email     string    `gorm:"type:varchar(255);not null;unique_index" json:"email"`
-	Password  string    `gorm:"type:varchar(255);not null"`
+	Password  string    `gorm:"type:varchar(255);not null" json:"-"`
 	Role      uint      `sql:"default:0"`
 	IsActive  bool      `sql:"default:false" json:"is_active"`
 	IsDelete  bool      `sql:"default:false" json:"is_delete"`
-	Token     string    `gorm:"type:varchar(32)"`
+	Token     string    `gorm:"type:varchar(32)" json:"token"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func CreateUser(username string, email string, password string) (*User, error) {
-	user := &User{
-		Username: username,
-		Email:    email,
-		Password: generatePasswordHash(password),
-	}
-	err := db.ORM.Create(user).Error
+func (u *User) BeforeCreate(scope *gorm.Scope) error {
+	hd := hashids.NewData()
+	hd.Salt = u.Username
+	hd.MinLength = 16
+	h := hashids.NewWithData(hd)
+	e, _ := h.Encode([]int{0})
 
-	return user, err
+	scope.SetColumn("GUID", e)
+	return nil
 }
 
-func UpdateUser(user *User) error {
-	err := db.ORM.Save(user).Error
+func (u *User) Create() error {
+	err := db.ORM.Create(u).Error
 
 	return err
 }
 
-func GetUserById(id interface{}) (*User, error) {
-	user := new(User)
-	err := db.ORM.Where("id = ?", id).First(user).Error
+func (u *User) Update() error {
+	err := db.ORM.Save(u).Error
 
-	return user, err
+	return err
+}
+
+func GetUserById(id string) (*User, error) {
+	user := User{}
+	err := db.ORM.Where("guid = ?", id).First(&user).Error
+
+	return &user, err
 }
 
 func GetUserByUsernameOrEmail(account string) (*User, error) {
-	user := new(User)
+	user := User{}
 	var err error
 	if strings.Contains(account, "@") {
-		err = db.ORM.Where("lower(email) = ?", strings.ToLower(account)).First(user).Error
+		err = db.ORM.Where("lower(email) = ?", strings.ToLower(account)).First(&user).Error
 	} else {
-		err = db.ORM.Where("lower(username) = ?", strings.ToLower(account)).First(user).Error
+		err = db.ORM.Where("lower(username) = ?", strings.ToLower(account)).First(&user).Error
 	}
 
-	return user, err
+	return &user, err
 }
 
 func CheckPassword(passwordHash string, password string) error {
@@ -66,7 +75,7 @@ func CheckPassword(passwordHash string, password string) error {
 	return nil
 }
 
-func generatePasswordHash(password string) string {
+func GeneratePasswordHash(password string) string {
 	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
 	return string(passwordHash)

@@ -11,7 +11,7 @@ import (
 func Me(c *gin.Context) {
 	claims, err := token.Parse(c.Request)
 	if err == nil {
-		userid := claims["userid"]
+		userid := claims["userid"].(string)
 		username := claims["username"].(string)
 
 		redisConn := db.RedisPool.Get()
@@ -33,13 +33,7 @@ func Me(c *gin.Context) {
 		user, err := models.GetUserById(userid)
 		if err == nil {
 			c.JSON(200, gin.H{
-				"data": map[string]interface{}{
-					"id":         user.ID,
-					"username":   user.Username,
-					"email":      user.Email,
-					"created_at": user.CreatedAt,
-					"updated_at": user.UpdatedAt,
-				},
+				"data": user,
 			})
 		} else {
 			c.JSON(401, gin.H{})

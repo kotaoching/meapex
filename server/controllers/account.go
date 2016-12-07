@@ -12,22 +12,19 @@ import (
 
 func Signup(c *gin.Context) {
 	username := c.PostForm("username")
-
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 
-	user, err := models.CreateUser(username, email, password)
+	user := &models.User{
+		Username: username,
+		Email:    email,
+		Password: models.GeneratePasswordHash(password),
+	}
+
+	err := user.Create()
 	if err == nil {
 		c.JSON(200, gin.H{
-			"data": map[string]interface{}{
-				"id": user.ID,
-				"attributes": map[string]interface{}{
-					"username":   user.Username,
-					"email":      user.Email,
-					"created_at": user.CreatedAt,
-					"updated_at": user.UpdatedAt,
-				},
-			},
+			"data": user,
 		})
 	} else {
 		c.JSON(400, gin.H{
@@ -47,7 +44,7 @@ func Signin(c *gin.Context) {
 	user, _ := models.GetUserByUsernameOrEmail(account)
 	err := models.CheckPassword(user.Password, password)
 	if err == nil {
-		signedToken := token.New(user.ID, user.Username, time.Now().Add(time.Hour*24*7).Unix())
+		signedToken := token.New(user.GUID, user.Username, time.Now().Add(time.Hour*24*7).Unix())
 
 		redisConn := db.RedisPool.Get()
 		redisConn.Do("SET", "me:user:"+user.Username+":token", signedToken, "EX", int64(time.Hour*24*7))
@@ -56,13 +53,7 @@ func Signin(c *gin.Context) {
 
 		c.JSON(200, gin.H{
 			"token": signedToken,
-			"data": map[string]interface{}{
-				"id":         user.ID,
-				"username":   user.Username,
-				"email":      user.Email,
-				"created_at": user.CreatedAt,
-				"updated_at": user.UpdatedAt,
-			},
+			"data":  user,
 		})
 	} else {
 		c.JSON(400, gin.H{
@@ -94,15 +85,17 @@ func FindPassword(c *gin.Context) {
 	if err == nil {
 		token := utils.GenerateRandom(16)
 		user.Token = token
-		models.UpdateUser(user)
 
-		c.JSON(200, gin.H{
-			"data": map[string]interface{}{
-				"status":  "200",
-				"title":   "Find password success",
-				"message": "We have sent you an email, check your inbox.",
-			},
-		})
+		err := user.Update()
+		if err == nil {
+			c.JSON(200, gin.H{
+				"data": map[string]interface{}{
+					"status":  "200",
+					"title":   "Find password success",
+					"message": "We have sent you an email, check your inbox.",
+				},
+			})
+		}
 	} else {
 		c.JSON(400, gin.H{
 			"errors": []interface{}{map[string]interface{}{

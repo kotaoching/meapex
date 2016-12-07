@@ -14,12 +14,12 @@ const (
 )
 
 type Claims struct {
-	Userid   uint   `json:"userid"`
+	Userid   string `json:"userid"`
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
-func New(userid uint, username string, expire int64) string {
+func New(userid string, username string, expire int64) string {
 	claims := Claims{
 		userid,
 		username,
