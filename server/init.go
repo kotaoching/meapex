@@ -1,8 +1,6 @@
 package server
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/meapex/meapex/server/controllers"
 	"github.com/meapex/meapex/server/controllers/api"
@@ -28,9 +26,9 @@ func Init() {
 	apiv1 := r.Group("/api")
 	{
 		apiv1.GET("/me", api.Me)
-		apiv1.GET("/resource", func(c *gin.Context) {
-			c.String(http.StatusOK, "login")
-		})
+		apiv1.GET("/resources", api.GetAllResource)
+		apiv1.GET("/resources/:id", api.GetResourceById)
+		apiv1.POST("/resources", api.CreateResource)
 	}
 
 	r.Run(":8080")
@@ -41,12 +39,13 @@ func initDB() {
 	config, _ := toml.LoadFile("./config/config.toml")
 
 	databaseHost := config.Get("database.host").(string)
+	databasePort := config.Get("database.port").(string)
 	databaseDBname := config.Get("database.dbname").(string)
 	databaseUsername := config.Get("database.username").(string)
 	databasePassword := config.Get("database.password").(string)
 
-	db.InitDB(databaseHost, databaseUsername, databasePassword, databaseDBname)
-	db.ORM.AutoMigrate(&models.User{})
+	db.InitDB(databaseHost, databasePort, databaseUsername, databasePassword, databaseDBname)
+	db.ORM.AutoMigrate(&models.User{}, &models.Resource{})
 
 	redisHost := config.Get("redis.host").(string)
 	redisPort := config.Get("redis.port").(string)

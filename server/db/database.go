@@ -9,9 +9,9 @@ var (
 	ORM *gorm.DB
 )
 
-func InitDB(host string, username string, password string, dbname string) *gorm.DB {
+func InitDB(host string, port string, username string, password string, dbname string) *gorm.DB {
 	var err error
-	ORM, err = gorm.Open("postgres", "host="+host+" user="+username+" password="+password+" dbname="+dbname+" sslmode=disable")
+	ORM, err = gorm.Open("postgres", "host="+host+" port="+port+" user="+username+" password="+password+" dbname="+dbname+" sslmode=disable")
 	if err != nil {
 		panic(err)
 		return nil
