@@ -5,7 +5,11 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/meapex/meapex/server/db"
-	"github.com/speps/go-hashids"
+	"github.com/meapex/meapex/server/utils"
+)
+
+const (
+	PAGESIZE = 10
 )
 
 type Resource struct {
@@ -16,6 +20,9 @@ type Resource struct {
 	Content    string    `gorm:"type:text" json:"content,omitempty"`
 	Attribute  string    `gorm:"type:text" json:"attribute,omitempty"`
 	Reference  string    `sql:"type:JSON" json:"reference,omitempty"`
+	Version    string    `gorm:"type:varchar(255)" json:"version"`
+	Creator    string    `gorm:"type:varchar(255);not null;unique_index" json:"creator"`
+	Actor      string    `gorm:"type:varchar(255);not null;unique_index" json:"actor"`
 	Password   string    `gorm:"type:varchar(255);" json:"-"`
 	IsDelete   bool      `sql:"default:false" json:"is_delete"`
 	ShareCount uint      `sql:"default:0" json:"share_count"`
@@ -25,13 +32,9 @@ type Resource struct {
 }
 
 func (r *Resource) BeforeCreate(scope *gorm.Scope) error {
-	hd := hashids.NewData()
-	hd.Salt = r.Slug
-	hd.MinLength = 16
-	h := hashids.NewWithData(hd)
-	e, _ := h.Encode([]int{0})
+	guid := utils.GenerateHashid(r.Slug, []int{0})
+	scope.SetColumn("GUID", guid)
 
-	scope.SetColumn("GUID", e)
 	return nil
 }
 
@@ -41,9 +44,9 @@ func (r *Resource) Create() error {
 	return err
 }
 
-func GetAllResource() (*[]Resource, error) {
+func GetAllResource(page int) (*[]Resource, error) {
 	resources := []Resource{}
-	err := db.ORM.Table("resources").Select("id, guid, title, slug, created_at, updated_at").Where("is_delete = ?", false).Find(&resources).Error
+	err := db.ORM.Table("resources").Select("id, guid, title, slug, created_at, updated_at").Where("is_delete = ?", false).Limit(PAGESIZE).Offset(PAGESIZE * (page - 1)).Find(&resources).Error
 
 	return &resources, err
 }

@@ -6,7 +6,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/meapex/meapex/server/db"
-	"github.com/speps/go-hashids"
+	"github.com/meapex/meapex/server/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,19 +19,15 @@ type User struct {
 	Role      uint      `sql:"default:0"`
 	IsActive  bool      `sql:"default:false" json:"is_active"`
 	IsDelete  bool      `sql:"default:false" json:"is_delete"`
-	Token     string    `gorm:"type:varchar(32)" json:"token"`
+	Token     string    `gorm:"type:varchar(64)" json:"token"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (u *User) BeforeCreate(scope *gorm.Scope) error {
-	hd := hashids.NewData()
-	hd.Salt = u.Username
-	hd.MinLength = 16
-	h := hashids.NewWithData(hd)
-	e, _ := h.Encode([]int{0})
+	guid := utils.GenerateHashid(u.Username, []int{0})
+	scope.SetColumn("GUID", guid)
 
-	scope.SetColumn("GUID", e)
 	return nil
 }
 

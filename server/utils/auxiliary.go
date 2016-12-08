@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/nu7hatch/gouuid"
+	"github.com/speps/go-hashids"
 )
 
 func GenerateUUID() (string, error) {
@@ -18,6 +19,16 @@ func GenerateUUID() (string, error) {
 	}
 
 	return uid, err
+}
+
+func GenerateHashid(salt string, input []int) string {
+	hd := hashids.NewData()
+	hd.Salt = salt
+	hd.MinLength = 16
+	h := hashids.NewWithData(hd)
+	e, _ := h.Encode(input)
+
+	return e
 }
 
 func GenerateRandom(n int) string {

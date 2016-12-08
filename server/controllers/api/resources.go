@@ -11,7 +11,9 @@ import (
 
 // GetAllResource ...
 func GetAllResource(c *gin.Context) {
-	resources, _ := models.GetAllResource()
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+
+	resources, _ := models.GetAllResource(page)
 	c.JSON(200, gin.H{
 		"data": resources,
 	})
@@ -63,14 +65,7 @@ func CreateResource(c *gin.Context) {
 		json.Unmarshal([]byte(resource.Reference), &objectReference)
 
 		c.JSON(200, gin.H{
-			"data": map[string]interface{}{
-				"guid":      resource.GUID,
-				"title":     resource.Title,
-				"slug":      resource.Slug,
-				"content":   resource.Content,
-				"attribute": resource.Attribute,
-				"reference": objectReference,
-			},
+			"data": resource,
 		})
 	} else {
 	}
