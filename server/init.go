@@ -44,8 +44,10 @@ func initDB() {
 	databaseUsername := config.Get("database.username").(string)
 	databasePassword := config.Get("database.password").(string)
 
-	db.InitDB(databaseHost, databasePort, databaseUsername, databasePassword, databaseDBname)
+	db.InitORM(databaseHost, databasePort, databaseUsername, databasePassword, databaseDBname)
 	db.ORM.AutoMigrate(&models.User{}, &models.Resource{})
+
+	db.InitSqlx(databaseHost, databasePort, databaseUsername, databasePassword, databaseDBname)
 
 	redisHost := config.Get("redis.host").(string)
 	redisPort := config.Get("redis.port").(string)
